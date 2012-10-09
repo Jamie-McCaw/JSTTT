@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+  <head>
+	<meta charset="utf-8">
+	<script type="text/javascript">
+		var gameOver = false;
+		var numMoves = 0;
+
+
+		function squareClicked(square)
+		// used when a button is clicked by the player and calls the makeComputerMove function.
+		{
+		 var status = document.getElementById('status');
+		 var value = square.value;
+		 if(gameOver)
+		 	{
+		 		alert("The game is already over.");
+		 		return;
+		 	}
+		 if(value != 'X' && value != 'O')
+		 {
+		   	  numMoves++;
+		   	  status.innerHTML = "Move #" + (numMoves + 2);
+		      square.value = 'X';
+		      xColor(square);
+		      makeComputerMove();
+		 }
+		   else
+		      alert('That square has already been played.');
+
+			 var winner = checkWin();
+			 if(!winner)
+			 {
+			   //check to see if there is a tie
+			   if(numMoves == 9)
+			      status.innerHTML = 'Tie Game!';
+			 }
+			 else
+			   gameOver = true;
+		}
+
+
+		function newgame()
+		{ 
+			//creates a new game
+		   var status = document.getElementById('status');
+		   numMoves = 0;
+		   gameOver = false;
+		   status.innerHTML = 'Move #1';
+
+		   for(var x = 0; x < 3; x++)
+		   {
+		      for(var y = 0; y < 3; y++)
+		      {
+		         document.getElementById(x + '_' + y).value = ' ';
+		         document.getElementById(x + '_' + y).style.backgroundColor = '#eeeeee';
+		         document.getElementById(x + '_' + y).style.color = '#000000';
+		      }
+		   }
+		}
+
+
+		function checkWin()
+		{ //checks whether a game has been won.
+		 var status = document.getElementById('status');
+		 var val0;
+		 var val1;
+		 var val2;
+
+		 // check columns
+		 for(var y = 0; y < 3; y++)
+		 {
+		   val0 = document.getElementById('0_'+y).value;
+		   val1 = document.getElementById('1_'+y).value;
+		   val2 = document.getElementById('2_'+y).value;
+		   if(val0 == 'X' && val1 == 'X' && val2 == 'X')
+		   {
+		      status.innerHTML = "X WINS!";
+		      return true;
+		   }
+		   else if(val0 == 'O' && val1 == 'O' && val2 == 'O')
+		   {
+		      status.innerHTML = "O WINS!";
+		      return true;
+		   }
+		 }
+
+		 // check rows
+		 for(var x = 0; x < 3; x++)
+		 {
+		   val0 = document.getElementById(x + '_0').value;
+		   val1 = document.getElementById(x + '_1').value;
+		   val2 = document.getElementById(x + '_2').value;
+		   if(val0 == 'X' && val1 == 'X' && val2 == 'X')
+		   {
+		      status.innerHTML = "X WINS!";
+		      return true;
+		   }
+		   else if(val0 == 'O' && val1 == 'O' && val2 == 'O')
+		   {
+		      status.innerHTML = "O WINS!";
+		      return true;
+		   }
+		 }
+
+		 // check top left to lower right diagonal
+		 val0 = document.getElementById('0_0').value;
+		 val1 = document.getElementById('1_1').value;
+		 val2 = document.getElementById('2_2').value;
+		 if(val0 == 'X' && val1 == 'X' && val2 == 'X')
+		 {
+		   status.innerHTML = "X WINS!";
+		   return true;
+		 }
+		 else if(val0 == 'O' && val1 == 'O' && val2 == 'O')
+		 {
+		   status.innerHTML = "O WINS!";
+		   return true;
+		 }
+
+		 // check lower left to top right diagonal
+		 val0 = document.getElementById('2_0').value;
+		 val1 = document.getElementById('1_1').value;
+		 val2 = document.getElementById('0_2').value;
+		 if(val0 == 'X' && val1 == 'X' && val2 == 'X')
+		 {
+		   status.innerHTML = "X WINS!";
+		 return true;
+		 }
+		 else if(val0 == 'O' && val1 == 'O' && val2 == 'O')
+		 {
+		   status.innerHTML = "O WINS!";
+		   return true;
+		 }
+
+		 // no winner yet return false;
+		}
+	
+
+		function makeComputerMove()
+		{ //calls logic and updates numMoves
+		         numMoves++;
+		         logic();
+		         
+		}
+	
+
+		function logic()
+		{	//ai logic function that calls check functions
+			var status = document.getElementById('status');
+			if(numMoves === 2)
+			{
+				if(document.getElementById('1_1').value != 'X')
+					{
+					document.getElementById('1_1').value = 'O';
+					} 
+				else {
+					document.getElementById('0_2').value = 'O';
+					}
+			}
+			else if(numMoves === 4)
+					{
+						check2();
+					}
+			else if(numMoves === 6)
+					{
+						checkWin();
+						check2();	
+					}
+			else if(numMoves === 8)
+					{
+						checkWin();
+						check2();
+					}
+			else if(numMoves === 9 || numMoves === 10)
+			     	{
+				     	checkWin();
+				        status.innerHTML = 'Tie Game!';
+					}
+		}
+		
+		function check2()
+		{
+							//check elements for moves
+						   var val0 = document.getElementById('0_0').value;
+						   var val1 = document.getElementById('1_0').value;
+						   var val2 = document.getElementById('2_0').value;
+						   var val3 = document.getElementById('0_1').value;
+						   var val4 = document.getElementById('1_1').value;
+						   var val5 = document.getElementById('2_1').value;
+						   var val6 = document.getElementById('0_2').value;
+						   var val7 = document.getElementById('1_2').value;
+						   var val8 = document.getElementById('2_2').value;
+						    
+						   
+						   //look for win
+
+						   //horizontal cases
+						   	if(val0 === 'O' && val1 === 'O' && val2 !== 'O' && val2 !== 'X')
+						   	{
+						      	document.getElementById('2_0').value = 'O';
+						   	}
+						    else if(val1 === 'O' && val2 === 'O' && val0 !== 'O' && val0 !== 'X')
+							{
+							   	document.getElementById('0_0').value = 'O';
+							}
+						    else if(val0 === 'O' && val2 === 'O' && val1 !== 'O' && val1 !== 'X')
+						 	{
+						 		document.getElementById('1_0').value = 'O';
+						 	}
+						    else if(val3 === 'O' && val4 === 'O' && val5 !== 'O' && val5 !== 'X')
+							{
+							   	document.getElementById('2_1').value = 'O';
+							}
+							else if(val4 === 'O' && val5 === 'O' && val3 !== 'O' && val3 !== 'X')
+							{
+							   	document.getElementById('0_1').value = 'O';
+							}
+							else if(val3 === 'O' && val5 === 'O' && val7 !== 'O' && val7 !== 'X')
+							{
+							   	document.getElementById('1_2').value = 'O';
+							}
+							else if(val6 === 'O' && val7 === 'O' && val8 !== 'O' && val8 !== 'X')
+							{
+							   	document.getElementById('2_2').value = 'O';
+							}
+							else if(val7 === 'O' && val8 === 'O' && val6 !== 'O' && val6 !== 'X')
+							{
+							   	document.getElementById('0_2').value = 'O';
+							}
+							else if(val6 === 'O' && val8 === 'O' && val7 !== 'O' && val7 !== 'X')
+							{
+							   	document.getElementById('1_2').value = 'O';
+							}
+
+							//vertical cases
+							else if(val0 === 'O' && val3 === 'O' && val6 !== 'O' && val6 !== 'X')
+							{
+							   	document.getElementById('0_2').value = 'O';
+							}
+							else if(val3 === 'O' && val6 === 'O' && val0 !== 'O' && val0 !== 'X')
+							{
+							   	document.getElementById('0_0').value = 'O';
+							}
+							else if(val0 === 'O' && val6 === 'O' && val3 !== 'O' && val3 !== 'X')
+							{
+							   	document.getElementById('0_1').value = 'O';
+							}
+							else if(val1 === 'O' && val4 === 'O' && val7 !== 'O' && val7 !== 'X')
+							{
+							   	document.getElementById('1_2').value = 'O';
+							}
+							else if(val4 === 'O' && val7 === 'O' && val1 !== 'O' && val1 !== 'X')
+							{
+							   	document.getElementById('1_0').value = 'O';
+							}
+							else if(val1 === 'O' && val7 === 'O' && val6 !== 'O' && val6 !== 'X')
+							{
+							   	document.getElementById('0_2').value = 'O';
+							}
+							else if(val2 === 'O' && val5 === 'O' && val8 !== 'O' && val8 !== 'X')
+							{
+							   	document.getElementById('2_2').value = 'O';
+							}
+							else if(val5 === 'O' && val8 === 'O' && val2 !== 'O' && val2 !== 'X')
+							{
+							   	document.getElementById('2_0').value = 'O';
+							}
+							else if(val2 === 'O' && val8 === 'O' && val5 !== 'O' && val5 !== 'X')
+							{
+							   	document.getElementById('2_1').value = 'O';
+							}
+
+							//diagonal cases
+							else if(val0 === 'O' && val4 === 'O' && val8 !== 'O' && val8 !== 'X')
+							{
+							   	document.getElementById('2_2').value = 'O';
+							}
+							else if(val4 === 'O' && val8 === 'O' && val0 !== 'O' && val0 !== 'X')
+							{
+							   	document.getElementById('0_0').value = 'O';
+							}
+							else if(val0 === 'O' && val8 === 'O' && val7 !== 'O' && val7 !== 'X')
+							{
+							   	document.getElementById('1_2').value = 'O';
+							}
+							else if(val6 === 'O' && val4 === 'O' && val2 !== 'O' && val2 !== 'X')
+							{
+							   	document.getElementById('2_0').value = 'O';
+							}
+							else if(val4 === 'O' && val2 === 'O' && val6 !== 'O' && val6 !== 'X')
+							{
+							   	document.getElementById('0_2').value = 'O';
+							}
+							else if(val6 === 'O' && val2 === 'O' && val7 !== 'O' && val7 !== 'X')
+							{
+							   	document.getElementById('1_2').value = 'O';
+							}
+
+
+
+							//block player win
+
+						    //horizontal cases
+						    else if(val0 === 'X' && val1 === 'X' && val2 !== 'O' && val2 !== 'X')
+						   	{
+						      	document.getElementById('2_0').value = 'O';
+						   	}
+						    else if(val1 === 'X' && val2 === 'X' && val0 !== 'O' && val0 !== 'X')
+							{
+							   	document.getElementById('0_0').value = 'O';
+							}
+						    else if(val0 === 'X' && val2 === 'X' && val1 !== 'O' && val1 !== 'X')
+						 	{
+						 		document.getElementById('1_0').value = 'O';
+						 	}
+						    else if(val3 === 'X' && val4 === 'X' && val5 !== 'O' && val5 !== 'X')
+							{
+							   	document.getElementById('2_1').value = 'O';
+							}
+							else if(val4 === 'X' && val5 === 'X' && val3 !== 'O' && val3 !== 'X')
+							{
+							   	document.getElementById('0_1').value = 'O';
+							}
+							else if(val3 === 'X' && val5 === 'X' && val7 !== 'O' && val7 !== 'X')
+							{
+							   	document.getElementById('1_2').value = 'O';
+							}
+							else if(val6 === 'X' && val7 === 'X' && val8 !== 'O' && val8 !== 'X')
+							{
+							   	document.getElementById('2_2').value = 'O';
+							}
+							else if(val7 === 'X' && val8 === 'X' && val6 !== 'O' && val6 !== 'X')
+							{
+							   	document.getElementById('0_2').value = 'O';
+							}
+							else if(val6 === 'X' && val8 === 'X' && val7 !== 'O' && val7 !== 'X')
+							{
+							   	document.getElementById('1_2').value = 'O';
+							}
+
+							//vertical Cases
+							else if(val0 === 'X' && val3 === 'X' && val6 !== 'O' && val6 !== 'X')
+							{
+							   	document.getElementById('0_2').value = 'O';
+							}
+							else if(val3 === 'X' && val6 === 'X' && val0 !== 'O' && val0 !== 'X')
+							{
+							   	document.getElementById('0_0').value = 'O';
+							}
+							else if(val0 === 'X' && val6 === 'X' && val3 !== 'O' && val3 !== 'X')
+							{
+							   	document.getElementById('0_1').value = 'O';
+							}
+							else if(val1 === 'X' && val4 === 'X' && val7 !== 'O' && val7 !== 'X')
+							{
+							   	document.getElementById('1_2').value = 'O';
+							}
+							else if(val4 === 'X' && val7 === 'X' && val1 !== 'O' && val1 !== 'X')
+							{
+							   	document.getElementById('1_0').value = 'O';
+							}
+							else if(val1 === 'X' && val7 === 'X' && val6 !== 'O' && val6 !== 'X')
+							{
+							   	document.getElementById('0_2').value = 'O';
+							}
+							else if(val2 === 'X' && val5 === 'X' && val8 !== 'O' && val8 !== 'X')
+							{
+							   	document.getElementById('2_2').value = 'O';
+							}
+							else if(val5 === 'X' && val8 === 'X' && val2 !== 'O' && val2 !== 'X')
+							{
+							   	document.getElementById('2_0').value = 'O';
+							}
+							else if(val2 === 'X' && val8 === 'X' && val5 !== 'O' && val5 !== 'X')
+							{
+							   	document.getElementById('2_1').value = 'O';
+							}
+
+							//diagonal cases
+							else if(val0 === 'X' && val4 === 'X' && val8 !== 'O' && val8 !== 'X')
+							{
+							   	document.getElementById('2_2').value = 'O';
+							}
+							else if(val4 === 'X' && val8 === 'X' && val0 !== 'O' && val0 !== 'X')
+							{
+							   	document.getElementById('0_0').value = 'O';
+							}
+							else if(val0 === 'X' && val8 === 'X' && val7 !== 'O' && val7 !== 'X')
+							{
+							   	document.getElementById('1_2').value = 'O';
+							}
+							else if(val6 === 'X' && val4 === 'X' && val2 !== 'O' && val2 !== 'X')
+							{
+							   	document.getElementById('2_0').value = 'O';
+							}
+							else if(val4 === 'X' && val2 === 'X' && val6 !== 'O' && val6 !== 'X')
+							{
+							   	document.getElementById('0_2').value = 'O';
+							}
+							else if(val6 === 'X' && val2 === 'X' && val7 !== 'O' && val7 !== 'X')
+							{
+							   	document.getElementById('1_2').value = 'O';
+							}
+
+							//trick cases
+							else if(val6 === 'X' && val1 === 'X' && val0 !== 'O' && val0 !== 'X')
+							{
+							   	document.getElementById('0_0').value = 'O';
+							}
+							else if(val8 === 'X' && val1 === 'X' && val2 !== 'O' && val2 !== 'X')
+							{
+							   	document.getElementById('2_0').value = 'O';
+							}
+							else if(val0 === 'X' && val5 === 'X' && val2 !== 'O' && val2 !== 'X')
+							{
+							   	document.getElementById('2_0').value = 'O';
+							}
+							else if(val6 === 'X' && val5 === 'X' && val8 !== 'O' && val8 !== 'X')
+							{
+							   	document.getElementById('2_2').value = 'O';
+							}
+							else if(val3 === 'X' && val2 === 'X' && val0 !== 'O' && val0 !== 'X')
+							{
+							   	document.getElementById('0_0').value = 'O';
+							}
+							else if(val3 === 'X' && val8 === 'X' && val6 !== 'O' && val6 !== 'X')
+							{
+							   	document.getElementById('0_2').value = 'O';
+							}
+							else if(val0 === 'X' && val7 === 'X' && val6 !== 'O' && val6 !== 'X')
+							{
+							   	document.getElementById('0_2').value = 'O';
+							}
+							else if(val2 === 'X' && val7 === 'X' && val8 !== 'O' && val8 !== 'X')
+							{
+							   	document.getElementById('2_2').value = 'O';
+							}
+							else if(val4 === 'X' && val2 === 'X' && val0 !== 'O' && val0 !== 'X')
+							{
+							   	document.getElementById('0_0').value = 'O';
+							}
+							else if(val3 === 'X' && val1 === 'X' && val0 !== 'O' && val0 !== 'X')
+							{
+							   	document.getElementById('0_0').value = 'O';
+							}
+							else if(val1 === 'X' && val5 === 'X' && val2 !== 'O' && val2 !== 'X')
+							{
+							   	document.getElementById('2_0').value = 'O';
+							}
+							else if(val7 === 'X' && val5 === 'X' && val8 !== 'O' && val8 !== 'X')
+							{
+							   	document.getElementById('2_2').value = 'O';
+							}
+							else if(val3 === 'X' && val7 === 'X' && val6 !== 'O' && val6 !== 'X')
+							{
+							   	document.getElementById('0_2').value = 'O';
+							}
+							else {
+								emptySquare();
+							}
+		}
+		//in case there are no moves
+		function emptySquare(){
+			//check elements for an empty square
+			 var val0 = document.getElementById('0_0').value;
+			 var val1 = document.getElementById('1_0').value;
+			 var val2 = document.getElementById('2_0').value;
+			 var val3 = document.getElementById('0_1').value;
+			 var val4 = document.getElementById('1_1').value;
+			 var val5 = document.getElementById('2_1').value;
+			 var val6 = document.getElementById('0_2').value;
+			 var val7 = document.getElementById('1_2').value;
+			 var val8 = document.getElementById('2_2').value;
+
+			 //choose a square 
+			if(val7 !== 'X' && val7 !== 'O'){
+				document.getElementById('1_2').value = 'O'
+			}
+			else if(val1 !== 'X' && val1 !== 'O'){
+				document.getElementById('1_0').value = 'O'
+			}
+			else if(val0 !== 'X' && val0 !== 'O'){
+				document.getElementById('0_0').value = 'O'
+			}
+			else if(val2 !== 'X' && val2 !== 'O'){
+				document.getElementById('2_0').value = 'O'
+			}
+			else if(val3 !== 'X' && val3 !== 'O'){
+				document.getElementById('0_1').value = 'O'
+			}
+			else if(val4 !== 'X' && val4 !== 'O'){
+				document.getElementById('1_1').value = 'O'
+			}
+			else if(val5 !== 'X' && val5 !== 'O'){
+				document.getElementById('2_1').value = 'O'
+			}
+			else if(val6 !== 'X' && val6 !== 'O'){
+				document.getElementById('0_2').value = 'O'
+			}
+			else if(val8 !== 'X' && val8 !== 'O'){
+				document.getElementById('2_2').value = 'O'
+			}
+		}
+		function xColor(square){
+			//change the color for the x player
+			if (square.value !== 'O'){
+			square.style.backgroundColor = '#ee0000';
+			square.style.color = '#ffffff';
+			}
+		}
+	</script>
+	<title>Tic Tac Toe</title>
+  </head>
+
+  <body onload="newgame()">
+  		<div id="content" style="height: 800px; width: 600px; margin:0 auto;">
+  		<!--create the board-->
+  		<form name="ttt">
+  		<input type="button" style="height: 75px; width: 75px;" id="0_0" value=" " onclick="squareClicked(this);">
+		<input type="button" style="height: 75px; width: 75px;" id="1_0" value=" " onclick="squareClicked(this);">
+		<input type="button" style="height: 75px; width: 75px;" id="2_0" value=" " onclick="squareClicked(this);">
+		<br />
+		<input type="button" style="height: 75px; width: 75px;" id="0_1" value=" " onclick="squareClicked(this);">
+		<input type="button" style="height: 75px; width: 75px;" id="1_1" value=" " onclick="squareClicked(this);">
+		<input type="button" style="height: 75px; width: 75px;" id="2_1" value=" " onclick="squareClicked(this);">
+		<br />
+		<input type="button" style="height: 75px; width: 75px;" id="0_2" value=" " onclick="squareClicked(this);">
+		<input type="button" style="height: 75px; width: 75px;" id="1_2" value=" " onclick="squareClicked(this);">
+		<input type="button" style="height: 75px; width: 75px;" id="2_2" value=" " onclick="squareClicked(this);">
+		<br />
+
+		<p id="status"></p>
+		<br />
+		<input type="button" style="height: 25px; width: 225px;" id="NEWGAME" value="New Game" onclick="newgame();">
+		</form>
+		</div>
+	</body>
+</html>
